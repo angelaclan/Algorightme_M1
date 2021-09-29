@@ -1,24 +1,22 @@
+
+# define the hight and length by giving as tuple (h,l)
+# add the tuple (h,l) in the given point list (GP) to define the limit of the region
+# X and Y element index is for clairity, we can also use directly 0 and 1 in the code
+
+h,l= (25,20)
+GP = [(2,5), (5,17), (11,4), (16,6), (20,1), (25,20)]
 Y_ELEMENT_INDEX = 1
 X_ELEMENT_INDEX = 0
-
-h = 25
-l = 20
-XL = [2,5,11,16,20,25]
-YL = [5,17,4,6,1,20]
-GP = [(2,5), (5,17), (11,4), (16,6), (20,1), (25,0)]
-areas = []
  
 def isInBetween (x, y, a):
     if x < a and a < y :
         return True
     return False
 
-# a for loop to verify if a point is contained inside a rectangle, 
-# and we use an if condition there to detect if there is any point inside a rectangle,
+# we use an if condition there to detect if there is any point inside a rectangle
 # by comparing the value of x and y position.
 # if yes, we return True
 # if no, we return False
-# complexity of O(n)
 def contains (left, right, points):
     for inner in points :
         if isInBetween(left[X_ELEMENT_INDEX], right[X_ELEMENT_INDEX] , inner[X_ELEMENT_INDEX]) and isInBetween(left[Y_ELEMENT_INDEX], right[Y_ELEMENT_INDEX] , inner[Y_ELEMENT_INDEX]) :
@@ -38,8 +36,8 @@ def currentBasesFrom(points):
 # we subsitute x position of the currentBase by using the x position of all the points
 # since we are calculating the surface base on x = 0
 # we compare always the points on the right side of currentBase points
-# check first if there is any point in middle of the rectangle with an if condition before comparing the size of surfaces
-# therefor the complaxity is O(N4)
+# however in this version we calulate the surface first and find the maxsurface then verify if this surface contains any points
+# therefore in this version the complexity is O(N3)
 def solveProblem (points, width, height):
     currentBase = (0,0)
     maxsurface = 0
@@ -49,7 +47,7 @@ def solveProblem (points, width, height):
                 right = (x,y)
                 temp = surface(currentBase, right)
                 if temp > maxsurface:
-                    if contains(currentBase, right, points) :
+                    if not contains(currentBase, right, points) :
                         maxsurface =  temp
                      
                     

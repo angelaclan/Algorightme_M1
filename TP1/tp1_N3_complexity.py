@@ -12,7 +12,6 @@ def isInBetween (x, y, a):
     if x < a and a < y :
         return True
     return False
-
 # a for loop to verify if a point is contained inside a rectangle, 
 # and we use an if condition there to detect if there is any point inside a rectangle,
 # by comparing the value of x and y position.
@@ -38,8 +37,8 @@ def currentBasesFrom(points):
 # we subsitute x position of the currentBase by using the x position of all the points
 # since we are calculating the surface base on x = 0
 # we compare always the points on the right side of currentBase points
-# check first if there is any point in middle of the rectangle with an if condition before comparing the size of surfaces
-# therefor the complaxity is O(N4)
+# however in this version we calulate the surface first and find the maxsurface then verify if this surface contains any points
+# therefore in this version the complexity is O(N3)
 def solveProblem (points, width, height):
     currentBase = (0,0)
     maxsurface = 0
@@ -49,7 +48,7 @@ def solveProblem (points, width, height):
                 right = (x,y)
                 temp = surface(currentBase, right)
                 if temp > maxsurface:
-                    if contains(currentBase, right, points) :
+                    if not contains(currentBase, right, points) :
                         maxsurface =  temp
                      
                     
