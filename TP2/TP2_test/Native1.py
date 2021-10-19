@@ -32,12 +32,14 @@ def printBoard (board) :
   
 
 def somebodyWon (board):
-    if 'X' in board[0]:
+  
+    if 'P' in board[0]:
         return True
-    if 'O' in board[-1]:
+    if 'p' in board[-1]:
         return True
-    return False 
 
+    return False
+    
 def canMoveUp(board,pawn):
     x = pawn[0]
     y = pawn[1]
@@ -83,9 +85,9 @@ def canMoveUpDiagonalPlus(board,pawn):
     y = pawn[1]
     if not board[x][y] == 'P':
         return False
-    if x == len(board)  -1:
+    if x == len(board) -1:
         return False
-    if y == len(board[x])  -1:
+    if y == len(board[x]) - 1:
         return False
     return board[x - 1][y + 1] == 'p'
 
@@ -94,13 +96,13 @@ def canMoveUpDiagonalMinus(board,pawn):
     y = pawn[1]
     if not board[x][y] == 'P':
         return False
-    if x == len(board)  -1:
+    if x == len(board) - 1:
         return False
     if y == 0:
         return False
     return board[x - 1][y - 1] == 'p'
 
-def boardCopyWith (board, origin, destination) :
+def boardcopyWith (board, origin, destination) :
     newBoard = deepcopy(board)
     
     x = origin[0]
@@ -117,50 +119,79 @@ def boardCopyWith (board, origin, destination) :
     return newBoard
 
 ''' ****************************************************************************************************************
-    Following some improvised test cases .
+    Following some improvised test cases 7. 8.
     **************************************************************************************************************** '''
-board = [  [None, None, None, None, None, None],  ['p', 'p', None, 'p', 'p', None],  ['P', None, 'p', None, None, 'P'], [None, 'P', 'P', 'P', None, 'p'], [None, None, None, None, 'P', None],  [None, None, None, None, None, None] ]
-assert (canMoveDown(board,(1,0) ) is False)
-assert (canMoveDown(board,(1,4) ) is True)
-assert (canMoveUp(board,(2,2) ) is False)
-assert (canMoveUp(board,(3,1) ) is True)
-assert (canMoveDown(board,(3,1) ) is False)
-assert (canMoveUpDiagonalMinus(board,(3,1) ) is False)
-assert (canMoveUpDiagonalPlus(board,(3,1) ) is True)
-
+#board = [  [None, None, None, None, None, None],  ['p', 'p', None, 'p', 'p', None],  ['P', None, 'p', None, None, 'P'], [None, 'P', 'P', 'P', None, 'p'], [None, None, None, None, 'P', None],  [None, None, None, None, None, None] ]
+# assert (canMoveDown(board,(1,0) ) is False)
+# assert (canMoveDown(board,(1,4) ) is True)
+# assert (canMoveUp(board,(2,2) ) is False)
+# assert (canMoveUp(board,(3,1) ) is True)
+# assert (canMoveDown(board,(3,1) ) is False)
+# assert (canMoveUpDiagonalMinus(board,(3,1) ) is False)
+# assert (canMoveUpDiagonalPlus(board,(3,1) ) is True)
+# board = [ [None, None, None, None, None, None], ['p', None, 'p', None, 'p', None], ['P', 'p', None, None, 'P', None], [None, None, None, None, None, None], ['P', 'P', 'P', None, 'p', None], [None, None, None, None, 'P', None] ]
+#board = [[None, 'p', None, 'p'], ['p', 'P', 'P', None], ['P', None, None, 'P']]
+#board = [[None, 'p', None, 'p'], ['p', 'P', None, None], [None, None, 'P', 'P']]
+board = [['p', None, 'p', 'p'], [None, 'p', None, None], ['P', 'P', None, None], [None, None, 'P', 'P']]
 ''' ****************************************************************************************************************
     End Testing
     **************************************************************************************************************** ''' 
-
+# b pawn
 def pPlayerPlays (board) :
-    possibilities = [board]
+    
+    if somebodyWon(board):
+        printBoard(board)
+        l.append(0)    
+    
     for i in range(len(board)):
         for j in range(len(board[i])):
             if canMoveDown(board, (i,j)) :
-                possibilities.append(boardCopyWith (board, (i,j), (i+1, j)))
+                tuple = PPlayerPlays(boardcopyWith (board, (i,j), (i+1, j)))
+                if tuple[0] :
+                    l.append(tuple[2]+1)
             if canMoveDownDiagonalPlus(board, (i,j)) :
-                possibilities.append(boardCopyWith (board, (i,j), (i+1, j+1)))
+                tuple = PPlayerPlays(boardcopyWith (board, (i,j), (i+1, j+1)))
+                if tuple[0] :
+                    l.append(tuple[2]+1)         
+                
             if canMoveDownDiagonalMinus(board, (i,j)) :
-                possibilities.append(boardCopyWith (board, (i,j), (i+1, j-1)))
-    return possibilities
+                tuple = PPlayerPlays(boardcopyWith (board, (i,j), (i+1, j-1)))
+                if tuple[0] :
+                    l.append(tuple[2]+1)
 
+    return max(l)
+
+# w pawn
 def PPlayerPlays (board) :
-    possibilities = [board]
+    
+    if somebodyWon(board):
+        printBoard(board)
+        l.append(1)
+          
     for i in range(len(board)):
         for j in range(len(board[i])):
             if canMoveUp(board, (i,j)) :
-                possibilities.append(boardCopyWith (board, (i,j), (i-1, j)))
+                tuple = pPlayerPlays(boardcopyWith (board, (i,j), (i-1, j)))
+                if tuple[0]:
+                    l.append(tuple[1]+1)
+                    print(l)
             if canMoveUpDiagonalPlus(board, (i,j)) :
-                possibilities.append(boardCopyWith (board, (i,j), (i-1, j+1)))
+                tuple = pPlayerPlays(boardcopyWith (board, (i,j), (i-1, j+1)))
+                if tuple[0]:
+                    l.append(tuple[1]+1)
             if canMoveUpDiagonalMinus(board, (i,j)) :
-                possibilities.append(boardCopyWith (board, (i,j), (i-1, j-1)))
-    return possibilities
+                tuple = pPlayerPlays(boardcopyWith (board, (i,j), (i-1, j-1)))
+                if tuple[0]:
+                    l.append(tuple[1]+1)
+               
+    return max(l)
+
+l = []
+pos = PPlayerPlays(board)
+print(pos)
 
 
-
-
-
-
-
-
+# def sizeList (l) :
+#     if len (l) == 0 : return 0
+#     return 1 + sizeList(l[1:])
 
